@@ -16,6 +16,7 @@ QUESTIONS = [
 
 def main():
     store, llm = load()
+    (ROOT / "data").mkdir(exist_ok=True)
     results = []
     for question in QUESTIONS:
         print(f"\nQuestion: {question}", flush=True)
