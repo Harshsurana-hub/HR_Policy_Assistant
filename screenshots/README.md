@@ -1,3 +1,3 @@
-# Output screenshots
+# Terminal screenshots
 
-q1.jpg through q5.jpg show browser reports of actual saved CLI responses from data/evaluation.json. They are not terminal captures.
+q1.png through q5.png are genuine terminal captures supplied by the user from the running HR Policy Assistant. They replace the earlier report images in the main README.
