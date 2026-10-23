@@ -1,3 +1,11 @@
-# Terminal screenshots
+# Screenshot guide
 
-q1.png through q5.png are genuine terminal captures supplied by the user from the running HR Policy Assistant. They replace the earlier report images in the main README.
+| Files | Evidence |
+| --- | --- |
+| q1.png–q5.png | Genuine terminal captures supplied by the user; these are embedded in the README. |
+| ui-home.jpg | Working local browser interface, desktop layout. |
+| ui-answer.jpg | Live Privilege Leave answer with page 60 reference. |
+| ui-mobile.jpg | Responsive layout at a 390-pixel viewport. |
+| q1.jpg–q5.jpg | Historical saved-results report images, not terminal captures and no longer used by the README. |
+
+The screenshots show the source manual's policy outcomes. Their wording can differ from data/evaluation.json because the terminal screenshots come from a subsequent run.
