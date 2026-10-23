@@ -1,0 +1,6 @@
+.env
+.venv/
+__pycache__/
+chroma_db/
+hr_manual.pdf
+chroma_db_build/
