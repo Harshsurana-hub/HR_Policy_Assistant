@@ -11,4 +11,4 @@ Downloaded from the hyperlink embedded on page 1 of the supplied assignment. All
 5. **Maternity leave:** The manual states 90 days with pay, described there as “12 weeks(90days)”, for confirmed female staff who worked at least 80 days in the preceding 12 months; it states no more than “6 weeks(45days)” before expected delivery. Reference: page 62, [G] Leave Policy, Maternity Leave table. The manual's week/day equivalences are inconsistent; preserve its stated 90 days rather than silently converting the weeks. This reports the manual, not current statutory entitlement.
 
 ## Final verification
-Ingestion and all six evaluation questions completed. The README embeds browser screenshots of the actual saved responses, clearly labelled as report screenshots.
+Ingestion and all six evaluation questions completed. The README embeds five genuine terminal screenshots supplied by the user from a subsequent successful run.

@@ -22,3 +22,6 @@ Final model: gemini-3.5-flash-lite. Python 3.12.14; direct dependency versions p
 Actual generated responses: data/evaluation.json. All six final results were checked against their expected document outcome. Manual section names and eligibility details were also reviewed directly. Earlier failed runs exposed PDF word-break issues; the final run uses cleaned context and boolean support validation. The initial gemini-2.5-flash quota was exhausted; Google's API recommended the current Flash-Lite generation, which completed the final tests.
 
 Browser screenshots of the saved actual application-output reports are included in screenshots/ and embedded in README. They are explicitly labelled as recorded-result reports, not live terminal captures.
+
+## Terminal evidence
+The user supplied five genuine terminal screenshots from a subsequent run. All five show the expected policy outcomes; supported answers cite pages 60, 42 and 62. These screenshots are embedded in README and replace the earlier report illustrations.

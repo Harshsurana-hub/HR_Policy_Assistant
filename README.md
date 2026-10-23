@@ -32,7 +32,7 @@ HR_Policy_Assistant/
   TEST_RESULTS.md             Executed checks
   DOCUMENT_REVIEW.md          Manual inspection notes
   data/evaluation.json        Actual final answers
-  screenshots/               Recorded-result report screenshots
+  screenshots/               Genuine terminal answer screenshots
   hr_manual.pdf              Local manual, excluded from Git
   chroma_db/                 Local index, excluded from Git
 ```
@@ -117,25 +117,25 @@ python evaluate.py
 
 This records actual responses in data/evaluation.json and uses API quota. Inspect evidence whenever an expected answer is missed.
 
-## Output screenshots
-These browser screenshots display the exact recorded responses from the executed CLI evaluation (`data/evaluation.json`). They are screenshots of a results report, not live terminal captures. Each report shows the question, actual answer and available page reference.
+## Terminal output screenshots
+The following genuine terminal screenshots were captured while running the HR Policy Assistant against the supplied Enso manual. Supported answers display page references; unsupported answers display exactly `Not found`. The saved evaluation JSON records an earlier successful run, so phrasing may differ slightly while policy outcomes and page references agree.
 
 ### Q1 — Privilege Leave
-![Privilege Leave output](screenshots/q1.jpg)
+![Terminal: Privilege Leave answer, page 60](screenshots/q1.png)
 
 ### Q2 — Probation period
-![Probation output](screenshots/q2.jpg)
+![Terminal: Probation answer, page 42](screenshots/q2.png)
 
 ### Q3 — Health-insurance premium
-![Insurance premium Not found output](screenshots/q3.jpg)
+![Terminal: Insurance premium returns Not found](screenshots/q3.png)
 
 ### Q4 — Current GST rate
-![GST Not found output](screenshots/q4.jpg)
+![Terminal: GST returns Not found](screenshots/q4.png)
 
 ### Q5 — Maternity leave
-![Maternity leave output](screenshots/q5.jpg)
+![Terminal: Maternity leave answer, page 62](screenshots/q5.png)
 
-For live terminal screenshots, run `python main.py`, ask the same questions, then use Shift-Command-4 on macOS to capture the terminal.
+The maternity answer preserves the manual's stated 90 days and notes its inconsistent week/day conversion. These are document-derived answers, not statements of current statutory entitlements.
 
 ## GitHub repository
 [Harshsurana-hub/HR_Policy_Assistant](https://github.com/Harshsurana-hub/HR_Policy_Assistant)
