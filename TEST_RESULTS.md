@@ -25,3 +25,13 @@ Browser screenshots of the saved actual application-output reports are included 
 
 ## Terminal evidence
 The user supplied five genuine terminal screenshots from a subsequent run. All five show the expected policy outcomes; supported answers cite pages 60, 42 and 62. These screenshots are embedded in README and replace the earlier report illustrations.
+
+## Browser UI verification
+- Local backend ready: 79 pages, 280 persisted chunks.
+- Live browser suggestion: PL answer 12 days, source page 60; citation links to /manual#page=60.
+- Live browser input: GST returns exactly Not found; no supporting source card displayed.
+- Conversation export: downloaded actual conversation as text.
+- Desktop/source-panel layout reviewed at 1440×1000; compact layout reviewed at normal browser size.
+- Mobile layout reviewed at 390×844: document width equals viewport width (390 px), no horizontal overflow. Mobile new-conversation reset clears the draft.
+- HTTP validation: blank input 400, wrong content type 415, external origin 403, unknown path 404, /.env 404, PDF header and content type passed.
+- Python compilation and launcher shell syntax passed.

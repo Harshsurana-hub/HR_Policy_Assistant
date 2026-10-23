@@ -1,5 +1,22 @@
 # HR Policy Assistant
 
+## Browser interface
+A local web UI now sits on the same document-grounded Python pipeline. It includes suggested questions, a chat conversation, clickable PDF page references, a manual panel, session question history, conversation export, loading/error states and a responsive mobile layout.
+
+On the prepared Mac, double-click `Start_Web_Assistant.command`. Keep its Terminal window open while using the app. To launch manually after the existing environment setup:
+
+```sh
+python web_app.py --open
+```
+
+Open `http://127.0.0.1:8766` in your browser. Stop the local server with Control-C when finished. No extra Python dependencies are needed. Gemini still requires an internet connection and available quota. The server binds only to the local computer, and credentials remain in `.env` on the server.
+
+![Browser interface](screenshots/ui-home.jpg)
+
+![Live grounded answer with a policy reference](screenshots/ui-answer.jpg)
+
+The CLI and five genuine terminal screenshots below remain available for the original practical requirements.
+
 A college GenAI project that answers employee questions from the Enso Group HR Policy Manual using Python, LangChain and persistent ChromaDB. Supported answers include page references; unsupported questions return exactly `Not found`.
 
 ## Objectives and features
@@ -19,7 +36,10 @@ PDF whitespace and broken words are cleaned before generation. Evidence quotes m
 ## Files
 ```text
 HR_Policy_Assistant/
-  main.py                    Interactive assistant
+  web_app.py                 Local web server using the existing RAG pipeline
+  web/                       HTML, CSS and browser interactions
+  Start_Web_Assistant.command Mac browser-app launcher
+  main.py                    Interactive terminal assistant
   ingest.py                  Explicit database rebuild
   common.py                  Local settings and embeddings
   evaluate.py                Six-question verification
@@ -154,3 +174,6 @@ LLM verification reduces unsupported claims but is not a formal guarantee. Retri
 6. Gemini returns a structured answer plus supporting quotations and chunk IDs. The program discards quotations that cannot be matched to retrieved source text.
 7. A separate structured model check must confirm every answer claim is supported by the remaining quotes. Otherwise the program returns exactly `Not found`.
 8. References are produced from the metadata of the validated evidence chunks, converting page indices to one-based viewer pages. The database is reused across sessions.
+
+## UI verification
+The browser UI was tested with a live Privilege Leave query (12 days, page 60) and a live GST query (exact `Not found`). Conversation export downloaded successfully. Mobile layout at 390 px had no horizontal overflow, and new-conversation reset worked. Local API checks passed for blank input (400), wrong content type (415), cross-origin request rejection (403), unknown files (404), `.env` access (404), and PDF serving. The UI shares `main.ask` with the already tested terminal assistant; policy answers are not hardcoded in the browser.
