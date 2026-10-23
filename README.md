@@ -1,66 +1,45 @@
+<div align="center">
+
 # HR Policy Assistant
 
-## Browser interface
-A local web UI now sits on the same document-grounded Python pipeline. It includes suggested questions, a chat conversation, clickable PDF page references, a manual panel, session question history, conversation export, loading/error states and a responsive mobile layout.
+**Your policies, made clear.**
 
-On the prepared Mac, double-click `Start_Web_Assistant.command`. Keep its Terminal window open while using the app. To launch manually after the existing environment setup:
+A document-grounded HR assistant with a local web interface, a terminal app, and policy references you can verify.
 
-```sh
-python web_app.py --open
-```
+[![Offline tests](https://github.com/Harshsurana-hub/HR_Policy_Assistant/actions/workflows/tests.yml/badge.svg)](https://github.com/Harshsurana-hub/HR_Policy_Assistant/actions/workflows/tests.yml)
+![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![LangChain](https://img.shields.io/badge/LangChain-RAG-264A3C)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-persistent_index-849269)
+![Gemini](https://img.shields.io/badge/Gemini-generation_%26_embeddings-486B56)
 
-Open `http://127.0.0.1:8766` in your browser. Stop the local server with Control-C when finished. No extra Python dependencies are needed. Gemini still requires an internet connection and available quota. The server binds only to the local computer, and credentials remain in `.env` on the server.
+[Quick start](#quick-start) · [How it works](#how-it-works) · [Verified answers](#verified-assignment-answers) · [Screenshots](#terminal-evidence) · [Testing](#testing)
 
-![Browser interface](screenshots/ui-home.jpg)
+</div>
 
-![Live grounded answer with a policy reference](screenshots/ui-answer.jpg)
+![HR Policy Assistant browser interface](screenshots/ui-home.jpg)
 
-The CLI and five genuine terminal screenshots below remain available for the original practical requirements.
+## What it does
 
-A college GenAI project that answers employee questions from the Enso Group HR Policy Manual using Python, LangChain and persistent ChromaDB. Supported answers include page references; unsupported questions return exactly `Not found`.
+Ask employee-policy questions in a responsive browser UI or the original CLI. The assistant retrieves passages from the **supplied 79-page Enso Group HR Policy Manual**, validates supporting evidence, and cites the relevant PDF pages. If the manual does not support an answer, the answer is exactly **`Not found`**.
 
-## Objectives and features
-- Answer from the supplied manual, preserving policy qualifications.
-- Return traceable PDF page references.
-- Keep the index between sessions and ingest only when requested.
-- Support repeated CLI questions, blank input and clean exit.
-- Validate quoted evidence and check whether it supports the generated answer.
+| Experience | Included |
+| --- | --- |
+| Browser UI | Suggested questions, chat, manual viewer, clickable PDF references, session history, text export |
+| CLI | Repeated questions, blank-input handling, clean exit |
+| Grounding | Quote matching plus a separate answer-support check |
+| Local index | 280 chunks with page metadata, reused between sessions |
+| Verification | Six recorded live questions, genuine terminal captures, 14 offline regression tests |
 
-## Technologies and workflow
-Python 3.12, LangChain PDF loader and text splitter, Gemini embeddings, ChromaDB, and Gemini chat through langchain-google-genai.
+This is a **local demo app**, not a hosted service. Both interfaces call the same Python RAG pipeline. Browser questions are not answered from a hardcoded list.
 
-PDF → extraction with page metadata → 800-character chunks with 150-character overlap → Gemini embeddings → persistent ChromaDB → top-five retrieval → LangChain grounded prompt → evidence validation → model support check → answer and page reference.
+## Quick start
 
-PDF whitespace and broken words are cleaned before generation. Evidence quotes must match retrieved text after formatting normalization. A separate structured support check must confirm all claims. Similarity alone is never treated as proof. Model or API errors are shown as errors, not `Not found`.
+### 1. Get the code and install dependencies
 
-## Files
-```text
-HR_Policy_Assistant/
-  web_app.py                 Local web server using the existing RAG pipeline
-  web/                       HTML, CSS and browser interactions
-  Start_Web_Assistant.command Mac browser-app launcher
-  main.py                    Interactive terminal assistant
-  ingest.py                  Explicit database rebuild
-  common.py                  Local settings and embeddings
-  evaluate.py                Six-question verification
-  Start_Assistant.command    Mac launcher
-  requirements.txt           Pinned direct dependencies
-  .env.example               Secret-free settings template
-  .gitignore
-  README.md
-  LMS_ANSWERS.md              Copy-ready submission answers
-  TEST_RESULTS.md             Executed checks
-  DOCUMENT_REVIEW.md          Manual inspection notes
-  data/evaluation.json        Actual final answers
-  screenshots/               Genuine terminal answer screenshots
-  hr_manual.pdf              Local manual, excluded from Git
-  chroma_db/                 Local index, excluded from Git
-```
-
-## Prerequisites and installation
-Use Python 3.12 (tested: 3.12.14), internet access and a Gemini API key with quota. On macOS/zsh:
+Use **Python 3.12** (tested with 3.12.14), an internet connection, and a Gemini API key with available quota.
 
 ```sh
+git clone https://github.com/Harshsurana-hub/HR_Policy_Assistant.git
 cd HR_Policy_Assistant
 python3.12 -m venv .venv
 source .venv/bin/activate
@@ -68,112 +47,232 @@ python -m pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Enter your own key after `GOOGLE_API_KEY=` in `.env`, locally. Do not share or commit the key. Default chat model: `gemini-3.5-flash-lite`; embedding model: `models/gemini-embedding-001`. Model availability and quotas depend on the account.
+<details>
+<summary>Windows setup</summary>
 
-## Source manual and ingestion
-Use the exact [manual linked by the assignment](https://www.ensogroup.com/wp-content/themes/ensogroup/assets/images/enso-images/hr_manual.pdf). Save it as `hr_manual.pdf` beside main.py. The downloaded copy has 79 readable pages. The PDF is excluded from Git; the local project and submission ZIP include it.
+```powershell
+git clone https://github.com/Harshsurana-hub/HR_Policy_Assistant.git
+cd HR_Policy_Assistant
+py -3.12 -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+Copy-Item .env.example .env
+```
+
+If PowerShell activation is restricted, run `.venv\Scripts\python.exe` directly instead of changing system policy.
+
+</details>
+
+### 2. Configure your key and source document
+
+Open `.env` locally and fill in `GOOGLE_API_KEY`. The example file documents the settings:
+
+```dotenv
+GOOGLE_API_KEY=your_own_key_here
+CHAT_MODEL=gemini-3.5-flash-lite
+EMBEDDING_MODEL=models/gemini-embedding-001
+```
+
+Download the [exact HR manual linked in the assignment](https://www.ensogroup.com/wp-content/themes/ensogroup/assets/images/enso-images/hr_manual.pdf) and save it as **`hr_manual.pdf` in the project root**. The PDF, API key and generated database are excluded from Git.
+
+### 3. Build the index once
 
 ```sh
 python ingest.py
 ```
 
-Ingestion rejects empty/unreadable pages needing OCR. It creates 280 chunks for this manual and retains page metadata. To respect free-tier limits it stores 40 chunks per batch, waits 30 seconds between batches, and retries transient 429 errors. Expect several minutes. Rebuild after changing the PDF or embedding model; startup checks the PDF hash and model.
+The script loads all pages, rejects unreadable pages that need OCR, splits text into 800-character chunks with 150-character overlap, and persists embeddings in ChromaDB. For the supplied manual: **79 readable pages → 280 chunks**.
 
-## Run
+Ingestion uses paced batches and retries transient rate limits, so allow several minutes. Re-run it when the PDF or embedding model changes. Startup checks the document hash and embedding configuration.
+
+### 4. Launch the app
+
+```sh
+python web_app.py --open
+```
+
+The UI opens at **http://127.0.0.1:8766**. Keep the server running during the demo; press **Control-C** in its terminal to stop. The server accepts local connections only.
+
+On the prepared Mac, double-click `Start_Web_Assistant.command`. After a fresh clone, make the launchers executable if needed:
+
+```sh
+chmod +x Start_Web_Assistant.command Start_Assistant.command Capture_Terminal_Answers.command
+```
+
+Prefer the terminal interface?
+
 ```sh
 python main.py
 ```
 
-On the prepared Mac, you can also double-click `Start_Assistant.command`. Type a question and press Return; type `exit` to quit. Ordinary startup reuses the database.
+Type `exit` to quit. Neither interface rebuilds the index for each question.
 
-## Grounding and references
-The manual is the only policy source. Each supported answer cites PDF viewer pages generated from actual retrieved metadata. Printed and viewer numbers match on pages 42, 60 and 62. Section names below were verified directly in the document. Missing support produces exactly `Not found` with no citation. Questions about current GST are deliberately not answered from external tax information.
+## How it works
 
-## Five assigned questions — actual final application output
-### Q1. How many days of Privilege Leave (PL) does a permanent employee get per year?
-
-```text
-Answer: A permanent employee gets 12 days of Privilege Leave (PL) per year.
-
-Reference: HR Policy Manual, PDF viewer page(s) 60
+```mermaid
+flowchart LR
+    PDF[HR manual PDF] --> Load[Load pages and metadata]
+    Load --> Split[Split into overlapping chunks]
+    Split --> Embed[Gemini embeddings]
+    Embed --> DB[(Persistent ChromaDB)]
+    Q[Employee question] --> Retrieve[Retrieve top 5 chunks]
+    DB --> Retrieve
+    Retrieve --> Prompt[Grounded LangChain prompt]
+    Prompt --> Generate[Structured model answer]
+    Generate --> Validate[Match quotes and check support]
+    Validate --> Answer[Answer with page references]
+    Validate --> Fallback[Not found if unsupported]
 ```
 
-### Q2. What is the probation period for employees up to Senior Manager?
+1. **Load and index:** LangChain preserves each page's metadata; ChromaDB stores the chunks and embeddings locally.
+2. **Retrieve:** The question is embedded and compared with the stored vectors to retrieve five relevant chunks.
+3. **Generate:** PDF spacing and split-word artifacts are cleaned. A LangChain prompt instructs Gemini to answer only from those passages and return supporting quotations with chunk IDs.
+4. **Validate:** Quotes must match retrieved text after formatting normalization. A separate structured check must confirm that the remaining quotes support the answer.
+5. **Reference:** Page citations come from validated evidence metadata, converted to one-based PDF viewer pages. Similarity alone is not proof of support.
 
-```text
-Answer: The probation period for all employees up to Senior Manager is 3 months from their date of joining.
+**Failure and fallback are different:** missing evidence returns `Not found`; API, connectivity or quota problems are displayed as errors. Model verification reduces unsupported claims but is not a formal guarantee.
 
-Reference: HR Policy Manual, PDF viewer page(s) 42
-```
+## Verified assignment answers
 
-### Q3. What is the company's health-insurance premium amount?
+These outcomes were produced by the running application and checked against the source. Printed and PDF viewer page numbers match on pages 42, 60 and 62.
 
-```text
-Not found
-```
+| # | Assigned question | Verified outcome | Document reference |
+| --- | --- | --- | --- |
+| 1 | Permanent employee's annual Privilege Leave | **12 days per calendar year** | Page 60, [G] Leave Policy |
+| 2 | Probation up to Senior Manager | **3 months from joining** | Page 42, [B] Probation Policy |
+| 3 | Company's health-insurance premium | **`Not found`** | No supporting amount found |
+| 4 | Current GST rate in India | **`Not found`** | No supporting rate found |
+| 5 | Maternity-leave duration | **90 days with pay, as stated in the manual** | Page 62, [G] Leave Policy, Maternity Leave table |
 
-### Q4. What is the current GST rate in India?
+**Source qualifications:** no leave is credited during probation. Probation confirmation depends on review, and the manual permits one extension no longer than the original period. The maternity passage specifies confirmed female staff with at least 80 days worked in the preceding 12 months. It describes 90 days as “12 weeks” and 45 days as “6 weeks”; these conversions are inconsistent. The assistant preserves the stated policy rather than silently correcting it or substituting current law.
 
-```text
-Not found
-```
+GST is deliberately not answered from external tax knowledge. The document is the only policy source.
 
-### Q5. How many days of maternity leave are given?
+- [Copy-ready LMS answers](LMS_ANSWERS.md)
+- [Actual recorded application responses](data/evaluation.json)
+- [Executed checks and their limits](TEST_RESULTS.md)
+- [Manual review notes](DOCUMENT_REVIEW.md)
 
-```text
-Answer: The company provides a total of 12 weeks (- 90days) as Maternity Leave with pay. Note that the source text contains an inconsistent week-to-day conversion (12 weeks is equated to 90 days, while 6 weeks is equated to 45 days).
+## Interface gallery
 
-Reference: HR Policy Manual, PDF viewer page(s) 62
-```
+<details>
+<summary>Live browser answer with a clickable policy reference</summary>
 
-See LMS_ANSWERS.md for copy-ready answers with document-verified section names and eligibility qualifications. The maternity table's week/day conversions are inconsistent; the application reports the source rather than silently correcting it.
+![Live grounded browser answer](screenshots/ui-answer.jpg)
+
+</details>
+
+<details>
+<summary>Mobile layout</summary>
+
+<img src="screenshots/ui-mobile.jpg" width="360" alt="Mobile layout of the HR Policy Assistant">
+
+</details>
+
+## Terminal evidence
+
+These are genuine terminal screenshots supplied by the user from a successful run. The recorded JSON is from an earlier successful run, so wording can differ while outcomes and cited pages agree.
+
+<details>
+<summary>Q1 — Privilege Leave</summary>
+
+![Terminal answer: 12 days of Privilege Leave, page 60](screenshots/q1.png)
+
+</details>
+
+<details>
+<summary>Q2 — Probation period</summary>
+
+![Terminal answer: 3 months probation, page 42](screenshots/q2.png)
+
+</details>
+
+<details>
+<summary>Q3 — Health-insurance premium</summary>
+
+![Terminal answer: Not found for insurance premium](screenshots/q3.png)
+
+</details>
+
+<details>
+<summary>Q4 — Current GST rate</summary>
+
+![Terminal answer: Not found for current GST](screenshots/q4.png)
+
+</details>
+
+<details>
+<summary>Q5 — Maternity leave</summary>
+
+![Terminal answer: source-stated 90 days, page 62](screenshots/q5.png)
+
+</details>
+
+To capture a new run on macOS, double-click `Capture_Terminal_Answers.command`. It pauses after each answer for a genuine screenshot.
 
 ## Testing
-The final six-question run passed: the five assigned outcomes above plus exact `Not found` for an unsupported Mars-travel policy. Syntax, imports, document extraction, chunk metadata, ingestion, database persistence, separate-process retrieval, missing configuration/data, blank input and exit were checked. See TEST_RESULTS.md and data/evaluation.json. The previous model's quota limit was resolved by using the available current Flash-Lite model.
+
+### Offline regression tests — no API key or quota required
+
+```sh
+python -m unittest -v test_assistant
+```
+
+**14 tests passed locally.** They check evidence rejection, invalid source IDs, PDF word breaks, exact fallback behavior, HTTP validation, secret-file exclusion, and the distinction between model failures and unsupported answers. Fixtures are fictional; they do not replace live policy verification. GitHub Actions runs the same suite on pushes and pull requests, without API secrets.
+
+### Live document evaluation — uses Gemini quota
 
 ```sh
 python evaluate.py
 ```
 
-This records actual responses in data/evaluation.json and uses API quota. Inspect evidence whenever an expected answer is missed.
+This asks the five assigned questions plus an unsupported Mars-travel-policy question, then writes actual outputs to `data/evaluation.json`. Inspect the output and cited pages before replacing submission results. Previous live tests confirmed persistence, the six question outcomes, and browser behavior. See [the test report](TEST_RESULTS.md) for what was actually executed.
 
-## Terminal output screenshots
-The following genuine terminal screenshots were captured while running the HR Policy Assistant against the supplied Enso manual. Supported answers display page references; unsupported answers display exactly `Not found`. The saved evaluation JSON records an earlier successful run, so phrasing may differ slightly while policy outcomes and page references agree.
+## Repository map
 
-### Q1 — Privilege Leave
-![Terminal: Privilege Leave answer, page 60](screenshots/q1.png)
+```text
+HR_Policy_Assistant/
+├── web_app.py                      Local HTTP interface to the RAG pipeline
+├── web/                            HTML, CSS and browser interactions
+├── main.py                         Shared answer pipeline and terminal UI
+├── ingest.py                       Explicit PDF ingestion and index rebuild
+├── common.py                       Local configuration and embeddings
+├── evaluate.py                     Live six-question evaluation
+├── test_assistant.py               Offline regression tests
+├── requirements.txt                Pinned direct dependencies
+├── .env.example                    Secret-free configuration template
+├── .github/workflows/tests.yml     Automated offline checks
+├── Start_Web_Assistant.command     Mac web-app launcher
+├── Start_Assistant.command         Mac CLI launcher
+├── Capture_Terminal_Answers.command
+├── data/evaluation.json            Recorded live answers
+├── screenshots/                    UI previews and terminal evidence
+├── LMS_ANSWERS.md
+├── TEST_RESULTS.md
+└── DOCUMENT_REVIEW.md
+```
 
-### Q2 — Probation period
-![Terminal: Probation answer, page 42](screenshots/q2.png)
+Local files excluded from Git: `.env`, `.venv/`, `hr_manual.pdf`, `chroma_db/` and `chroma_db_build/`.
 
-### Q3 — Health-insurance premium
-![Terminal: Insurance premium returns Not found](screenshots/q3.png)
+## Troubleshooting
 
-### Q4 — Current GST rate
-![Terminal: GST returns Not found](screenshots/q4.png)
+| Symptom | What to do |
+| --- | --- |
+| Missing database / setup incomplete | Activate the virtual environment, configure `.env`, add the PDF and run `python ingest.py`. |
+| Invalid key / model request fails | Check the local key and network connection. Confirm the configured model is available to your account. |
+| Gemini rate limit | Wait for quota availability. Minute and daily limits are different; repeated retries cannot fix an exhausted daily quota. |
+| Embedding model or PDF changed | Re-run ingestion before asking questions. |
+| Blank or scanned PDF pages | Obtain a readable or OCR-processed copy of the supplied manual. OCR is not included. |
+| Port 8766 is in use | Open the existing app, stop its server, or run `python web_app.py --port 8767 --open`. |
+| Mac launcher does not open | Apply the executable permissions above, or use `python web_app.py --open` directly. |
+| A known passage returns `Not found` | Inspect retrieval and source extraction; do not replace the answer with a guessed value. |
 
-### Q5 — Maternity leave
-![Terminal: Maternity leave answer, page 62](screenshots/q5.png)
+## Scope and limitations
 
-The maternity answer preserves the manual's stated 90 days and notes its inconsistent week/day conversion. These are document-derived answers, not statements of current statutory entitlements.
+This is a beginner-friendly college RAG project, not a production HR decision system. The supplied manual can contain dated or inconsistent statements. Retrieval may miss relevant evidence, and LLM support checks can make mistakes. Verify important answers directly in the source PDF. The local app needs internet access and Gemini quota; browser conversations are kept only in the current session unless exported.
 
-## GitHub repository
-[Harshsurana-hub/HR_Policy_Assistant](https://github.com/Harshsurana-hub/HR_Policy_Assistant)
+The manual, generated index and credentials are not distributed in the repository. There is no hosted backend, authentication system, OCR pipeline or guarantee of current statutory compliance.
 
-Source, pinned requirements, workflow documentation, verified answers and output screenshots are included. Your key, virtual environment, PDF and generated index are excluded from Git. Download the original linked PDF and configure your own key to reproduce the run. `LMS_ANSWERS.md` contains copy-ready answers for the college form.
+## Contributing
 
-## Limitations and future improvements
-LLM verification reduces unsupported claims but is not a formal guarantee. Retrieval can miss evidence; manually review important policy answers. This application describes the supplied manual, which may contain dated or inconsistent statements. OCR is not included. Gemini quotas and network availability affect execution. Future improvements could add better table extraction and an offline model for demonstrations.
-
-## Retrieval and answer flow in detail
-1. `PyPDFLoader` extracts each PDF page and its zero-based page index.
-2. `RecursiveCharacterTextSplitter` produces chunks while retaining page metadata.
-3. Gemini converts the chunks into numeric embeddings, stored with their text in ChromaDB.
-4. At question time, ChromaDB compares the question embedding with stored embeddings and returns five chunks.
-5. Extracted whitespace and split-word hyphens are cleaned for readability. The LangChain prompt supplies the question and only those chunks to Gemini.
-6. Gemini returns a structured answer plus supporting quotations and chunk IDs. The program discards quotations that cannot be matched to retrieved source text.
-7. A separate structured model check must confirm every answer claim is supported by the remaining quotes. Otherwise the program returns exactly `Not found`.
-8. References are produced from the metadata of the validated evidence chunks, converting page indices to one-based viewer pages. The database is reused across sessions.
-
-## UI verification
-The browser UI was tested with a live Privilege Leave query (12 days, page 60) and a live GST query (exact `Not found`). Conversation export downloaded successfully. Mobile layout at 390 px had no horizontal overflow, and new-conversation reset worked. Local API checks passed for blank input (400), wrong content type (415), cross-origin request rejection (403), unknown files (404), `.env` access (404), and PDF serving. The UI shares `main.ask` with the already tested terminal assistant; policy answers are not hardcoded in the browser.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for checks and the rules for grounded policy answers.

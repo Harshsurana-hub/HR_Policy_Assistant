@@ -1,6 +1,15 @@
+# Credentials (keep the safe template tracked)
 .env
+.env.*
+!.env.example
+# Local runtime and generated files
 .venv/
+venv/
 __pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+# Rebuildable index and source manual
 chroma_db/
-hr_manual.pdf
 chroma_db_build/
+hr_manual.pdf
